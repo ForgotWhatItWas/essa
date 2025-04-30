@@ -1,6 +1,6 @@
 from .basic_decompose import BasicDecompose
 from .toeplitz_decompose import ToeplitzDecompose
-from .circulant_decompose import CirculantDecompose
+from .antihankel_decompose import AntiHankelDecompose
 from typing import Union
 import numpy as np
 
@@ -33,8 +33,8 @@ class Decompose:
         window_size: int,
         method: str = "basic",
         svd_method: str = None
-    ) -> Union[BasicDecompose, ToeplitzDecompose, CirculantDecompose]:
-        if method not in {"basic", "toeplitz", "circulant"}:
+    ) -> Union[BasicDecompose, ToeplitzDecompose, AntiHankelDecompose]:
+        if method not in {"basic", "toeplitz", "antihankel"}:
             raise ValueError(f"Invalid method: {method}")
 
         if method == "toeplitz":
@@ -42,10 +42,10 @@ class Decompose:
                 raise ValueError("SVD method is not supported for Toeplitz SSA")
             return ToeplitzDecompose(time_series, window_size)
 
-        if method == "circulant":
+        if method == "antihankel":
             if svd_method is not None:
-                raise ValueError("SVD method is not supported for Toeplitz SSA")
-            return CirculantDecompose(time_series, window_size)
+                raise ValueError("SVD method is not supported for Anti-Hankel SSA")
+            return AntiHankelDecompose(time_series, window_size)
         
         if svd_method not in {"full", "randomized", None}:
             raise ValueError("SVD method must be 'full' or 'randomized' for Basic SSA")
