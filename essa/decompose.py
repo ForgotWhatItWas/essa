@@ -1,5 +1,6 @@
 from .basic_decompose import BasicDecompose
 from .toeplitz_decompose import ToeplitzDecompose
+from .circulant_decompose import CirculantDecompose
 from typing import Union
 import numpy as np
 
@@ -32,14 +33,19 @@ class Decompose:
         window_size: int,
         method: str = "basic",
         svd_method: str = None
-    ) -> Union[BasicDecompose, ToeplitzDecompose]:
-        if method not in {"basic", "toeplitz"}:
+    ) -> Union[BasicDecompose, ToeplitzDecompose, CirculantDecompose]:
+        if method not in {"basic", "toeplitz", "circulant"}:
             raise ValueError(f"Invalid method: {method}")
 
         if method == "toeplitz":
             if svd_method is not None:
                 raise ValueError("SVD method is not supported for Toeplitz SSA")
             return ToeplitzDecompose(time_series, window_size)
+
+        if method == "circulant":
+            if svd_method is not None:
+                raise ValueError("SVD method is not supported for Toeplitz SSA")
+            return CirculantDecompose(time_series, window_size)
         
         if svd_method not in {"full", "randomized", None}:
             raise ValueError("SVD method must be 'full' or 'randomized' for Basic SSA")
