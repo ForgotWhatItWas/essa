@@ -20,13 +20,16 @@ def reconstruct(decompose: Union[BasicDecompose, ToeplitzDecompose], groups: Uni
         The reconstructed time series.
     """
     
-    def diagonal_averaging(matrix: np.ndarray) -> np.ndarray:
+    def diagonal_averaging(matrix: np.ndarray, N: int) -> np.ndarray:
         m, n = matrix.shape
-        reconstructed = np.zeros(m + n - 1)
-        for k in range(-m + 1, n):
-            diagonal = np.diagonal(matrix, offset=k)
-            reconstructed[k + m - 1] = diagonal.mean()
-        return reconstructed
+        reconstructed = np.zeros(N)
+        counts = np.zeros(N)
+        for i in range(m):
+            for j in range(n):
+                if i + j < N:
+                    reconstructed[i + j] += matrix[i, j]
+                    counts[i + j] += 1
+        return reconstructed / counts
 
     if not hasattr(decompose, "components"):
         raise ValueError("decompose time series before reconstruct")
@@ -34,6 +37,6 @@ def reconstruct(decompose: Union[BasicDecompose, ToeplitzDecompose], groups: Uni
     components = []
     for group in groups:
         X_group = np.sum([decompose.components[i] for i in group], axis=0)
-        component = diagonal_averaging(X_group)
+        component = diagonal_averaging(X_group, len(decomposer.self.time_series))
         components.append(component)
     return np.array(components)
