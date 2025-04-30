@@ -37,6 +37,6 @@ def reconstruct(decompose: Union[BasicDecompose, ToeplitzDecompose], groups: Uni
     components = []
     for group in groups:
         X_group = np.sum([decompose.components[i] for i in group], axis=0)
-        component = diagonal_averaging(X_group, len(decomposer.self.time_series))
+        component = diagonal_averaging(X_group, len(decompose.self.time_series))
         components.append(component)
     return np.array(components)
