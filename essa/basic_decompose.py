@@ -69,7 +69,7 @@ class BasicDecompose:
             Trajectory matrix of size (window_size, ts_size - window_size + 1)
         """
         K = len(self.time_series) - self.window_size + 1
-    return np.column_stack([self.time_series[i:i + K] for i in range(self.window_size)])
+        return np.column_stack([self.time_series[i:i + K] for i in range(self.window_size)])
 
     def _svd(self, matrix: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
